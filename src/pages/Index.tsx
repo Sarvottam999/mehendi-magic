@@ -1,12 +1,122 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Sparkles, Wand2, Download, RotateCcw, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ImageUpload from "@/components/ImageUpload";
+import { generatePreview } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const [handImage, setHandImage] = useState<File | null>(null);
+  const [mehendiDesign, setMehendiDesign] = useState<File | null>(null);
+  const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const canGenerate = handImage && mehendiDesign && !loading;
+
+  const handleGenerate = async () => {
+    if (!handImage || !mehendiDesign) return;
+    setLoading(true);
+    setResultUrl(null);
+    try {
+      const data = await generatePreview(handImage, mehendiDesign);
+      setResultUrl(data.result_url);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Something went wrong";
+      toast({ variant: "destructive", title: "Error", description: message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setHandImage(null);
+    setMehendiDesign(null);
+    setResultUrl(null);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border">
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-2">
+          <Sparkles size={22} className="text-foreground" />
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">TryMehendi</h1>
+        </div>
+      </header>
+
+      <main className="max-w-2xl mx-auto px-4 py-8 space-y-8">
+        {/* Upload Section */}
+        <section>
+          <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wide">
+            Upload Images
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <ImageUpload
+              label="Hand Image"
+              icon="hand"
+              file={handImage}
+              onFileChange={setHandImage}
+            />
+            <ImageUpload
+              label="Mehendi Design"
+              icon="palette"
+              file={mehendiDesign}
+              onFileChange={setMehendiDesign}
+            />
+          </div>
+        </section>
+
+        {/* Generate Button */}
+        <section className="flex justify-center">
+          <Button
+            size="lg"
+            disabled={!canGenerate}
+            onClick={handleGenerate}
+            className="min-w-[200px]"
+          >
+            {loading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Wand2 size={18} />
+                Generate Preview
+              </>
+            )}
+          </Button>
+        </section>
+
+        {/* Result Section */}
+        {resultUrl && (
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              Result
+            </h2>
+            <div className="rounded-lg border border-border overflow-hidden shadow-sm">
+              <img
+                src={resultUrl}
+                alt="Generated mehendi preview"
+                className="w-full object-contain"
+              />
+            </div>
+            <div className="flex gap-3 justify-center">
+              <Button variant="outline" asChild>
+                <a href={resultUrl} download="mehendi-preview.png">
+                  <Download size={16} />
+                  Download
+                </a>
+              </Button>
+              <Button variant="ghost" onClick={handleReset}>
+                <RotateCcw size={16} />
+                Try Again
+              </Button>
+            </div>
+          </section>
+        )}
+      </main>
     </div>
   );
 };
