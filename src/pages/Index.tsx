@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Sparkles, Wand2, Download, RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ImageUpload from "@/components/ImageUpload";
+import AdBanner from "@/components/AdBanner";
 import { generatePreview } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { useIsWebView } from "@/hooks/use-webview";
 
 const Index = () => {
   const [handImage, setHandImage] = useState<File | null>(null);
@@ -11,6 +13,7 @@ const Index = () => {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const isWebView = useIsWebView();
 
   const canGenerate = handImage && mehendiDesign && !loading;
 
@@ -45,6 +48,11 @@ const Index = () => {
         </div>
       </header>
 
+      {/* Top Banner Ad — leaderboard on desktop, small banner on mobile */}
+      <div className="max-w-2xl mx-auto px-4 pt-4">
+        <AdBanner format="leaderboard" slot="TOP_BANNER_SLOT" />
+      </div>
+
       <main className="max-w-2xl mx-auto px-4 py-8 space-y-8">
         {/* Upload Section */}
         <section>
@@ -66,6 +74,11 @@ const Index = () => {
             />
           </div>
         </section>
+
+        {/* Mid-page Ad — between uploads and result (skip in WebView) */}
+        {!isWebView && (
+          <AdBanner format="rectangle" slot="MID_CONTENT_SLOT" className="my-4" />
+        )}
 
         {/* Generate Button */}
         <section className="flex justify-center">
@@ -117,6 +130,14 @@ const Index = () => {
           </section>
         )}
       </main>
+
+      {/* Sticky Bottom Banner — mobile only, hidden in desktop */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 block md:hidden bg-background border-t border-border">
+        <AdBanner format="banner" slot="BOTTOM_BANNER_SLOT" />
+      </div>
+
+      {/* Bottom spacer on mobile so sticky ad doesn't cover content */}
+      <div className="h-14 block md:hidden" />
     </div>
   );
 };
