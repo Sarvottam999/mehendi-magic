@@ -30,7 +30,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, icon, file, onFileChan
   const IconComp = icon === "hand" ? Hand : Palette;
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full">
+    <div className="flex flex-col items-center gap-2 w-full ">
       <input
         ref={inputRef}
         type="file"
@@ -39,7 +39,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, icon, file, onFileChan
         onChange={handleChange}
       />
       {preview ? (
-        <div className="relative w-full aspect-square rounded-lg border border-border overflow-hidden shadow-sm">
+        <div className="relative w-full  rounded-lg border border-border overflow-hidden shadow-sm ">
           <img src={preview} alt={label} className="w-full h-full object-cover" />
           <button
             onClick={handleRemove}
@@ -53,7 +53,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, icon, file, onFileChan
         <button
           onClick={() => inputRef.current?.click()}
           className={cn(
-            "w-full aspect-square rounded-lg border-2 border-dashed border-border",
+            "w-full h-[160px] sm:h-auto sm:aspect-square rounded-lg border-2 border-dashed border-border",
             "flex flex-col items-center justify-center gap-3",
             "hover:border-foreground/40 hover:bg-muted/50 transition-colors cursor-pointer"
           )}

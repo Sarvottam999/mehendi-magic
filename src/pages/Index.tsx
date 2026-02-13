@@ -39,105 +39,149 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-2">
-          <Sparkles size={22} className="text-foreground" />
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">TryMehendi</h1>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header - Fixed for better mobile UX */}
+      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center gap-2">
+            <img src="./logo.png" alt=""   style={{
+              height: 50
+            }}/>
+
+            {/* <Sparkles size={20} className="text-foreground sm:w-6 sm:h-6" />
+            <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-foreground">
+              TryMehendi
+            </h1> */}
+          </div>
         </div>
       </header>
 
-      {/* Top Banner Ad — leaderboard on desktop, small banner on mobile */}
-      <div className="max-w-2xl mx-auto px-4 pt-4">
-        <AdBanner format="leaderboard" slot="TOP_BANNER_SLOT" />
-      </div>
+      {/* Top Banner Ad — responsive sizing */}
+      {/* <div className="container max-w-4xl mx-auto px-4 sm:px-6 pt-4">
+        <div className="w-full overflow-hidden">
+          <AdBanner format="leaderboard" slot="TOP_BANNER_SLOT" />
+        </div>
+      </div> */}
 
-      <main className="max-w-2xl mx-auto px-4 py-8 space-y-8">
-        {/* Upload Section */}
-        <section>
-          <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wide">
-            Upload Images
-          </h2>
-          <div className="grid grid-cols-2 gap-4">
-            <ImageUpload
-              label="Hand Image"
-              icon="hand"
-              file={handImage}
-              onFileChange={setHandImage}
-            />
-            <ImageUpload
-              label="Mehendi Design"
-              icon="palette"
-              file={mehendiDesign}
-              onFileChange={setMehendiDesign}
-            />
-          </div>
-        </section>
+<div className="relative container max-w-4xl mx-auto px-4 sm:px-6 pt-4 ">
+  <img src="b1.png"
+       alt="Banner"
+       className="w-full h-full object-cover"></img>
 
-        {/* Mid-page Ad — between uploads and result (skip in WebView) */}
-        {!isWebView && (
-          <AdBanner format="rectangle" slot="MID_CONTENT_SLOT" className="my-4" />
-        )}
+  {/* <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+    <h1 className="text-white text-4xl md:text-6xl font-bold">
+      Welcome to My Website
+    </h1>
+  </div> */}
+</div>
 
-        {/* Generate Button */}
-        <section className="flex justify-center">
-          <Button
-            size="lg"
-            disabled={!canGenerate}
-            onClick={handleGenerate}
-            className="min-w-[200px]"
-          >
-            {loading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Wand2 size={18} />
-                Generate Preview
-              </>
-            )}
-          </Button>
-        </section>
-
-        {/* Result Section */}
-        {resultUrl && (
-          <section className="space-y-4">
-            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-              Result
+      {/* Main Content - Scrollable with proper padding */}
+      <main className="flex-1 container max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-[140px] md:pb-8">
+      <div className="space-y-4 sm:space-y-6">
+      {/* Upload Section */}
+          <section>
+            <h2 className="text-xs sm:text-sm font-medium text-muted-foreground mb-3 sm:mb-4 uppercase tracking-wide">
+              Upload Images
             </h2>
-            <div className="rounded-lg border border-border overflow-hidden shadow-sm">
-              <img
-                src={resultUrl}
-                alt="Generated mehendi preview"
-                className="w-full object-contain"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+              <ImageUpload
+                label="Hand Image"
+                icon="hand"
+                file={handImage}
+                onFileChange={setHandImage}
+              />
+              <ImageUpload
+                label="Mehendi Design"
+                icon="palette"
+                file={mehendiDesign}
+                onFileChange={setMehendiDesign}
               />
             </div>
-            <div className="flex gap-3 justify-center">
-              <Button variant="outline" asChild>
-                <a href={resultUrl} download="mehendi-preview.png">
-                  <Download size={16} />
-                  Download
-                </a>
-              </Button>
-              <Button variant="ghost" onClick={handleReset}>
-                <RotateCcw size={16} />
-                Try Again
-              </Button>
-            </div>
           </section>
-        )}
+
+          {/* Mid-page Ad — responsive with proper overflow handling */}
+          {/* {!isWebView && (
+            <div className="w-full overflow-hidden my-3 sm:my-4">
+            <AdBanner format="rectangle" slot="MID_CONTENT_SLOT" />
+            </div>
+          )} */}
+
+          {/* Generate Button */}
+          <section className="flex justify-center">
+            <Button
+              size="lg"
+              disabled={!canGenerate}
+              onClick={handleGenerate}
+              className="w-full sm:w-auto sm:min-w-[200px] md:min-w-[240px] text-sm sm:text-base"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin sm:w-[18px] sm:h-[18px]" />
+                  <span className="ml-2">Generating...</span>
+                </>
+              ) : (
+                <>
+                  <Wand2 size={16} className="sm:w-[18px] sm:h-[18px]" />
+                  <span className="ml-2">Generate Preview</span>
+                </>
+              )}
+            </Button>
+          </section>
+
+          {/* Result Section - With proper image handling */}
+          {resultUrl && (
+            <section className="space-y-4 sm:space-y-6">
+              <h2 className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Result
+              </h2>
+              
+              {/* Image container with proper overflow and aspect ratio handling */}
+              <div className="rounded-lg border border-border overflow-hidden shadow-sm bg-muted/30">
+                <div className="relative w-full">
+                  <img
+                    src={resultUrl}
+                    alt="Generated mehendi preview"
+                    className="w-full h-auto max-h-[60vh] sm:max-h-[70vh] object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              
+              {/* Action buttons - Responsive layout */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:justify-center">
+                <Button 
+                  variant="outline" 
+                  asChild
+                  className="w-full sm:w-auto text-sm sm:text-base"
+                >
+                  <a href={resultUrl} download="mehendi-preview.png">
+                    <Download size={16} className="sm:w-[18px] sm:h-[18px]" />
+                    <span className="ml-2">Download</span>
+                  </a>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  onClick={handleReset}
+                  className="w-full sm:w-auto text-sm sm:text-base"
+                >
+                  <RotateCcw size={16} className="sm:w-[18px] sm:h-[18px]" />
+                  <span className="ml-2">Try Again</span>
+                </Button>
+              </div>
+            </section>
+          )}
+        </div>
       </main>
 
-      {/* Sticky Bottom Banner — mobile only, hidden in desktop */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 block md:hidden bg-background border-t border-border">
-        <AdBanner format="banner" slot="BOTTOM_BANNER_SLOT" />
-      </div>
+      {/* Sticky Bottom Banner — mobile only with safe area handling */}
+      {/* <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur border-t border-border pb-safe">
+              <div className="w-full overflow-hidden">
+          <AdBanner format="banner" slot="BOTTOM_BANNER_SLOT" />
+        </div>
+      </div> */}
 
-      {/* Bottom spacer on mobile so sticky ad doesn't cover content */}
-      <div className="h-14 block md:hidden" />
+      {/* Bottom spacer for sticky ad - with safe area support */}
+      {/* <div className="h-16 sm:h-20 md:hidden" aria-hidden="true" /> */}
     </div>
   );
 };
